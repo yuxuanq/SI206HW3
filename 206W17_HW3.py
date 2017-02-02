@@ -3,38 +3,75 @@ import re
 
 ## SI 206 - W17 - HW3
 ## COMMENT WITH:
-## Your section day/time:
-## Any names of people you worked with on this assignment:
+## Your section day/time: 003/Thursday 6-7pm
+## Any names of people you worked with on this assignment: Yuxuan Qiu
 
 #####################
 
 
 ## PART 1: 300 points
 
-## Use regular expressions to define a function called parse_counted_words which should accept a string, find strings of the form: <count> <word>  e.g. 101 Dalmations, inside it, and should return either the LAST correctly matching number-word combo in the string as a tuple, e.g. ('13', "pineapples"), if there are any such sub-strings, or None, if there are not.
-## The number in the <count> should be one or more digits only. The word should be made up of an optional non-alphabetic character followed by any number of alphabetic characters, upper or lower case.
+## Use regular expressions to define a function called parse_counted_words which should accept a string, find strings of
+# the form: <count> <word>  e.g. 101 Dalmations, inside it, and should return either the LAST correctly matching number-word combo in the string as a tuple,
+# e.g. ('13', "pineapples"), if there are any such sub-strings, or None, if there are not.
+## The number in the <count> should be one or more digits only. The word should be made up of an optional non-alphabetic
+# character followed by any number of alphabetic characters, upper or lower case.
 ## HINT:  \b matches the beginning or end of a word
 ## HINT:  you can use the Python re .findall method to get multiple matches in a string
 #parse_counted_words('5 watermelons, 13 pineapples, and 1 papaya.') should return ('1', 'papaya')
 # parse_counted_words('101 dalmations!') should return ('101', 'dalmations') ...
 
-## Write code to define your parse_counted_words function here.
-
-
+# Write code to define your parse_counted_words function here.
+def parse_counted_words (string) :
+    find = re.findall(r'([0-9]+) (\W*[A-z]+)', string)
+    if len(find) != 0:
+        return find[-1]
+    else:
+        return None
 
 
 ## PART 2: 200 points
 
-## We have provided a text file computer_paths.txt. It's not incredibly long -- you can scan through it, but do NOT hard code your answers! Each line contains 1 filesystem path.
+## We have provided a text file computer_paths.txt. It's not incredibly long -- you can scan through it, but do NOT hard
+# code your answers! Each line contains 1 filesystem path.
 
-## (a) Write Python code to determine how many of these paths identify FILES, not directories. Save that number in the variable file_paths_num.
+# ## (a) Write Python code to determine how many of these paths identify FILES, not directories. Save that number in the variable file_paths_num.
+def file_paths_num():
+    f = open("/Users/yuxuanqiu/desktop/git/computer_paths.txt", 'r')
+    count = 0
+    for line in f:
+        if len(re.findall(r'\w\.\w', line)) != 0:
+            count += 1
+    return count
 
 ## (b) Write Python code to determine how many of these paths are FULL paths, not relative paths. Save that number in the variable full_paths_num.
+def full_paths_num():
+    f = open("/Users/yuxuanqiu/desktop/git/computer_paths.txt", 'r')
+    count = 0
+    for line in f:
+        if len(re.findall(r'^(~*/)[A-z]', line)) != 0:
+            count += 1
+    return count
 
-## (c) Write Python code to determine how many of these paths describe a Python file saved inside a folder called SI206. Save that number in the variable python_course_paths.
+## (c) Write Python code to determine how many of these paths describe a Python file saved inside a folder called SI206.
+# Save that number in the variable python_course_paths.
+def python_course_paths():
+    f = open("/Users/yuxuanqiu/desktop/git/computer_paths.txt", 'r')
+    count = 0
+    for line in f:
+        if len(re.findall(r'SI206/.*\.py', line)) != 0:
+            count += 1
+    return count
 
-## (d) Write Python code to determine how many of these paths describe a Microsoft file (a file that EITHER ends with .docx OR .xlsx, but nothing else counts) where the file name ends in a digit. Save that total in the variable microsoft_files_num.
-
+## (d) Write Python code to determine how many of these paths describe a Microsoft file (a file that EITHER ends with .docx OR .xlsx,
+# but nothing else counts) where the file name ends in a digit. Save that total in the variable microsoft_files_num.
+def microsoft_files_num():
+    f = open("/Users/yuxuanqiu/desktop/git/computer_paths.txt", 'r')
+    count = 0
+    for line in f:
+        if len(re.findall(r'\d\.(docx|xlsx)', line)) != 0:
+            count += 1
+    return count
 
 
 
@@ -54,7 +91,7 @@ class Part1_HW3(unittest.TestCase):
         self.assertEqual(parse_counted_words('snow white and the 7 #littledwarves'),('7','#littledwarves'))
     def test_pcw_4(self):
         self.assertEqual(parse_counted_words('goldilocks and the 3 little pigs'),('3','little'))
-    def test_pcw_5(self): 
+    def test_pcw_5(self):
         self.assertEqual(parse_counted_words('678 1234567 890  '),None)
     def test_pcw_6(self):
         self.assertEqual(parse_counted_words("hellllo 5000"), None)
@@ -62,16 +99,16 @@ class Part1_HW3(unittest.TestCase):
         self.assertEqual(parse_counted_words("!!!! 6"), None)
     def test_pcw_8(self):
         self.assertEqual(parse_counted_words("!!!!! 72 and 76 calendars"),('76',"calendars"))
-
+#
 class Part2_HW3(unittest.TestCase):
     def test_cpaths_1(self):
-        self.assertEqual(file_paths_num,16)
+        self.assertEqual(file_paths_num(),16)
     def test_cpaths_2(self):
-        self.assertEqual(full_paths_num,16)
+        self.assertEqual(full_paths_num(),16)
     def test_cpaths_3(self):
-        self.assertEqual(python_course_paths,3)
+        self.assertEqual(python_course_paths(),3)
     def test_cpaths_4(self):
-        self.assertEqual(microsoft_files_num,3)
+        self.assertEqual(microsoft_files_num(),3)
 
 
 if __name__ == "__main__":
